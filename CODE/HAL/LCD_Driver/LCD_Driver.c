@@ -67,13 +67,13 @@ void LCD_Init(void)
 
     _delay_ms(10);
     LCD_WriteCommand(0x38); //select 8 bit mode,font 5*7,select 2 lines
-    _delay_ms(1);
+    _delay_us(200);
     LCD_WriteCommand(0x0c); //cursor  0x0c,0x0e,0x0f
-    _delay_ms(1);
+    _delay_us(200);
     LCD_WriteCommand(0x01); //clear lcd
     _delay_ms(2);
     LCD_WriteCommand(0x06); //DDRAM address increase
-    _delay_ms(1);
+    _delay_us(200);
 
 }
 #elif (LCD_MODE == 4)
@@ -87,17 +87,17 @@ void LCD_WriteCommand(uint8_t command)
     DIO_WritePin(D5, READ_BIT(command,5));
     DIO_WritePin(D4, READ_BIT(command,4));
     DIO_WritePin(EN, HIGH);
-    _delay_ms(1);
+    _delay_us(200);
     DIO_WritePin(EN, LOW);
-    _delay_ms(1);
+    _delay_us(200);
     DIO_WritePin(D7, READ_BIT(command,3));
     DIO_WritePin(D6, READ_BIT(command,2));
     DIO_WritePin(D5, READ_BIT(command,1));
     DIO_WritePin(D4, READ_BIT(command,0));
     DIO_WritePin(EN, HIGH);
-    _delay_ms(1);
+    _delay_us(200);
     DIO_WritePin(EN, LOW);
-    _delay_ms(1);
+    _delay_us(200);
 }
 
 void LCD_WriteData(uint8_t data)
@@ -109,17 +109,17 @@ void LCD_WriteData(uint8_t data)
     DIO_WritePin(D5, READ_BIT(data,5));
     DIO_WritePin(D4, READ_BIT(data,4));
     DIO_WritePin(EN, HIGH);
-    _delay_ms(1);
+    _delay_us(200);
     DIO_WritePin(EN, LOW);
-    _delay_ms(1);
+    _delay_us(200);
     DIO_WritePin(D7, READ_BIT(data,3));
     DIO_WritePin(D6, READ_BIT(data,2));
     DIO_WritePin(D5, READ_BIT(data,1));
     DIO_WritePin(D4, READ_BIT(data,0));
     DIO_WritePin(EN, HIGH);
-    _delay_ms(1);
+    _delay_us(200);
     DIO_WritePin(EN, LOW);
-    _delay_ms(1);
+    _delay_us(200);
 }
 void LCD_Init(void)
 {
@@ -133,15 +133,15 @@ void LCD_Init(void)
 
     _delay_ms(50);
     LCD_WriteCommand(0x02);
-    _delay_ms(1);
+    _delay_us(200);
     LCD_WriteCommand(0x28);     //select 4bit mode,font 5*7,select 2 lines
-    _delay_ms(1);
+    _delay_us(200);
     LCD_WriteCommand(0x0c);     //cursor  0x0c,0x0e,0x0f
-    _delay_ms(1);
+    _delay_us(200);
     LCD_WriteCommand(0x01);     //clear lcd
     _delay_ms(2);
     LCD_WriteCommand(0x06);     //DDRAM address increase
-    //_delay_ms(1);
+    //_delay_us(200);
     //LCD_WriteCommand(0x80);
 }
 #endif

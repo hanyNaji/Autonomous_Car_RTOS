@@ -31,8 +31,8 @@
 #define LED_GRN     (PF3)  /* PF2/LEDG */
 
 #define TASK_1_PERIOD   100U
-#define TASK_2_PERIOD   100U
-#define TASK_3_PERIOD   100U
+#define TASK_2_PERIOD   45U
+#define TASK_3_PERIOD   15U
 
 
 #define RED_LED    PF1
@@ -49,6 +49,7 @@ volatile uint8_t start_flag = 0;
 uint32_t temperature_Read = 0;
 uint32_t ldr_left_Read = 0;
 uint32_t ldr_right_Read = 0;
+uint32_t ldrs_Difference = 0;
 uint32_t ultraSonic_read = 0;
 
 volatile uint8_t  elapsed_time_S ;        /* To calculate seconds of the stop watch */
@@ -120,7 +121,7 @@ void GPIOF_Handler(void)
 /************ Tasks ************/
 
 /**
- * @brief Task 2 function that performs LDRs readings,
+ * @brief Task 1 function that performs LDRs readings,
  *        and swings the car based on the LDR.s differences.
  */
 void Task_1(void);
@@ -131,8 +132,7 @@ void Task_1(void)
         /* Read left LDR, and right LDR values */
         ldr_left_Read = LDR_Left_Read();
         ldr_right_Read = LDR_Right_Read();
-
-        int32_t ldrs_Difference = ldr_left_Read - ldr_right_Read;
+        ldrs_Difference = ldr_left_Read - ldr_right_Read;
 
         if(ldrs_Difference > 150 ){
             /* Swing Right */
@@ -157,27 +157,25 @@ void Task_1(void)
 }
 
 /**
- * @brief Task 2 function that performs temperature and LDR readings,
- *        displays the values on an LCD, and introduces a delay.
+ * @brief Task 2 function that displays temperature, LDRs, ultraSonic
+ *        and time elapsed readings values on an LCD.
  */
 void Task_2(void);
 void Task_2(void)
 {
 
-    /* Read temperature, ultraSonic_read, left LDR, and right LDR values */
+    /* Read temperature value */
     temperature_Read = Temperature_Read(CH_0);
-    ldr_left_Read = LDR_Left_Read();
-    ldr_right_Read = LDR_Right_Read();
-    int32_t ldrs_Difference = ldr_left_Read - ldr_right_Read;
-    ultraSonic_read = ultraSonic_Read_CM();
+    /* Read ultraSonic value */
+    ultraSonic_read = ultraSonic_Read_CM();     /*max time 15ms*/
 
     /* Display temperature, ultraSonic_read, LDR difference on LCD */
-    LCD_Display(temperature_Read, ultraSonic_read, ldrs_Difference, elapsed_time_S);
+    LCD_Display(temperature_Read, ultraSonic_read, ldrs_Difference, elapsed_time_S);    /*6.8ms / max time 15ms*/
 
 }
 
 /**
- * @brief Task 2 function that performs ultraSonic reading,
+ * @brief Task 3 function that performs ultraSonic reading,
  *        avoid obstacles if ultraSonic_Read_CM <= 10 CM.
  */
 void Task_3(void);
@@ -185,7 +183,9 @@ void Task_3(void)
 {
     if(start_flag)
     {
-        ultraSonic_read = ultraSonic_Read_CM();
+        /* Read ultraSonic value */
+        ultraSonic_read = ultraSonic_Read_CM();     /*max time 15ms approximately*/
+
         if(ultraSonic_read <= max_Obestacle_Distance){
             /* Move backward then rotate 90 degree */
             /* motors fun here */
@@ -265,9 +265,10 @@ void main(void)
 
 void LCD_Display(uint32_t temp, uint32_t ultra, uint32_t ldr_diff, uint32_t elapsed_time)
 {
-    LCD_SetCursor(0, 0);
-    LCD_WriteString("T= ");
-    LCD_WriteNumber_2D(temp-36);
+    /* 6.8 ms */
+    LCD_SetCursor(0, 0);     /* 800us */
+    LCD_WriteString("T= ");   /* (800us*chars) */
+    LCD_WriteNumber_2D(temp);   /* 800us*2 */
     LCD_WriteString(" | US= ");
     LCD_WriteNumber_3D(ultra);
     LCD_SetCursor(1, 0);
