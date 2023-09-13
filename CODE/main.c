@@ -31,10 +31,6 @@
 #define TASK_3_PERIOD   5U
 
 
-#define RED_LED    PF1
-#define BLUE_LED   PF2
-#define GREEN_LED  PF3
-
 #define SW1    PF4
 #define SW2    PF0
 
