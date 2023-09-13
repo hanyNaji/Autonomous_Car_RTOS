@@ -128,6 +128,16 @@ void move_Backward(uint32_t pwm)
     DIO_WritePin(MOTOR2_CTL_2, HIGH);
 }
 
+/**
+ * @brief stops the car at once.
+ */
+void car_Stop(void)
+{
+    DIO_WritePin(MOTOR1_CTL_1, LOW);
+    DIO_WritePin(MOTOR1_CTL_2, LOW);
+    DIO_WritePin(MOTOR2_CTL_1, LOW);
+    DIO_WritePin(MOTOR2_CTL_2, LOW);
+}
 
 
 
