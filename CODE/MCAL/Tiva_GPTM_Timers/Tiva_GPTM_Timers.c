@@ -10,7 +10,12 @@
 
 
 
-
+/**
+ * @brief Reads the captured value from the General-Purpose Timer Module (GPTM) for capture mode.
+ *
+ * @param timer_N The GPTM module.
+ * @return The captured value.
+ */
 uint32_t GPTM_capture_read(GPTM_Type timer_N)
 {
     uint32_t read = 0UL;
@@ -57,7 +62,11 @@ uint32_t GPTM_capture_read(GPTM_Type timer_N)
     return read;
 }
 
-
+/**
+ * @brief Enables the specified General-Purpose Timer Module (GPTM).
+ *
+ * @param timer_N The GPTM module to enable.
+ */
 void GPTM_Enable(GPTM_Type timer_N)
 {
     switch(timer_N){
@@ -103,7 +112,11 @@ void GPTM_Enable(GPTM_Type timer_N)
 
 }
 
-
+/**
+ * @brief Disables the specified General-Purpose Timer Module (GPTM).
+ *
+ * @param timer_N The GPTM module to disable.
+ */
 void GPTM_Disable(GPTM_Type timer_N)
 {
     switch(timer_N){
@@ -150,6 +163,11 @@ void GPTM_Disable(GPTM_Type timer_N)
 }
 
 
+/**
+ * @brief Initializes the General-Purpose Timer Module (GPTM) using the provided configuration.
+ *
+ * @param st_timer Pointer to a GPTM_Struct containing the timer configuration.
+ */
 void GPTM_Init(GPTM_Struct *st_timer)
 {
     switch(st_timer->timer){
@@ -437,6 +455,12 @@ void GPTM_Init(GPTM_Struct *st_timer)
 }
 
 
+/**
+ * @brief Loads the specified value into the TimerA Interval Load Register (TAILR) for the given timer module.
+ *
+ * @param timer_N The GPTM module.
+ * @param value The value to load into TAILR.
+ */
 void GPTM_TAILR_Value_Loud(GPTM_Type timer_N, uint32_t value)
 {
 
@@ -482,7 +506,11 @@ void GPTM_TAILR_Value_Loud(GPTM_Type timer_N, uint32_t value)
         }
 }
 
-
+/**
+ * @brief Initializes a GPIO pin for use with TimerA Capture/Compare (CCP) mode.
+ *
+ * @param pin The GPIO pin to initialize.
+ */
 void GPTM_CCP_PinInit(DIO_AllPINS_TYPE pin)
 {
     uint8_t Port_N = (uint8_t) pin / 8;
@@ -515,13 +543,11 @@ void GPTM_CCP_PinInit(DIO_AllPINS_TYPE pin)
 
 
 /**
- * @brief Measures the pulse width using Timer A Capture mode and returns the pulse width in timer counts.
+ * @brief Captures the pulse width of a signal using TimerA Capture/Compare (CCP) mode.
  *
- * This function measures the pulse width of the signal captured by Timer A in Capture mode.
- *
- * @param timer_N The Timer module to use (TIMER0, TIMER1, ...).
- * @param ccp_pin The Capture/Compare/PWM (CCP) pin connected to the signal source.
- * @return The pulse width in timer counts.
+ * @param timer_N The GPTM module.
+ * @param ccp_pin The GPIO pin configured for CCP mode.
+ * @return The pulse width in timer ticks.
  */
 uint32_t TimerA_Capture_PulseWidth(GPTM_Type timer_N, DIO_AllPINS_TYPE ccp_pin)
 {
@@ -731,11 +757,16 @@ uint32_t TimerA_Capture_PulseWidth(GPTM_Type timer_N, DIO_AllPINS_TYPE ccp_pin)
         default:
             break;
     }
-
+    return 0;
 }
 
 
-
+/**
+ * @brief Initializes the PWM mode for the specified General-Purpose Timer Module (GPTM) and associated GPIO pin.
+ *
+ * @param timer_N The GPTM module.
+ * @param pin The GPIO pin to configure for PWM mode.
+ */
 void GPTM_PWM_init(GPTM_Type timer_N, DIO_AllPINS_TYPE pin)
 {
     switch(timer_N)
@@ -904,6 +935,11 @@ void GPTM_PWM_init(GPTM_Type timer_N, DIO_AllPINS_TYPE pin)
     GPTM_PWM_PinInit(pin);
 }
 
+/**
+ * @brief Initializes a GPIO pin for use with PWM mode.
+ *
+ * @param pin The GPIO pin to initialize.
+ */
 void GPTM_PWM_PinInit(DIO_AllPINS_TYPE pin)
 {
     uint8_t Port_N = pin / PB0;
@@ -953,7 +989,12 @@ void GPTM_PWM_PinInit(DIO_AllPINS_TYPE pin)
 }
 
 
-
+/**
+ * @brief Sets the duty cycle of PWM output for the specified GPTM module.
+ *
+ * @param timer_N The GPTM module.
+ * @param pwm The PWM duty cycle value.
+ */
 void GPTM_PWM_Duty_Cycle (GPTM_Type timer_N, uint32_t pwm)
 {
         switch(timer_N)

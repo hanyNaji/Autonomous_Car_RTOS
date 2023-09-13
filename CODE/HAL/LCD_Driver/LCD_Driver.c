@@ -51,6 +51,10 @@ void LCD_WriteData(uint8_t data)
     DIO_WritePin(EN, LOW);
     _delay_ms(2);
 }
+
+/**
+ * @brief Initializes the LCD.
+ */
 void LCD_Init(void)
 {
     DIO_InitPin(RS, OUTPUT);
@@ -121,6 +125,10 @@ void LCD_WriteData(uint8_t data)
     DIO_WritePin(EN, LOW);
     _delay_us(200);
 }
+
+/**
+ * @brief Initializes the LCD.
+ */
 void LCD_Init(void)
 {
     DIO_InitPin(RS, OUTPUT);
@@ -162,13 +170,21 @@ void LCD_Init(void)
 
 /******************************************** FUNCTONS ********************************************/
 
-
+/**
+ * @brief Writes a character to the LCD.
+ *
+ * @param ch The character to be written.
+ */
 void LCD_WriteChar(uint8_t ch)
 {
     LCD_WriteData(ch);
 }
 
-
+/**
+ * @brief Writes a string to the LCD.
+ *
+ * @param str Pointer to the string to be written.
+ */
 void LCD_WriteString(uint8_t *str)
 {
     uint8_t i;
@@ -179,6 +195,11 @@ void LCD_WriteString(uint8_t *str)
 
 }
 
+/**
+ * @brief Writes a number to the LCD.
+ *
+ * @param num The number to be written.
+ */
 void LCD_WriteNumber(int32_t num)
 {
     uint8_t i=0,j,arr[16]={0};
@@ -208,6 +229,11 @@ void LCD_WriteNumber(int32_t num)
 
 }
 
+/**
+ * @brief Writes a number in binary format to the LCD.
+ *
+ * @param num The number to be written in binary format.
+ */
 void LCD_WriteNumberInBinary(uint8_t num)
 {
     int i, flag=0;
@@ -225,11 +251,20 @@ void LCD_WriteNumberInBinary(uint8_t num)
     }
 }
 
+/**
+ * @brief Clears the LCD display.
+ */
 void LCD_Clear(void)
 {
     LCD_WriteCommand(0X01);
 }
 
+/**
+ * @brief Sets the cursor position on the LCD.
+ *
+ * @param Line Line number (0 or 1).
+ * @param x Column number.
+ */
 void LCD_SetCursor(uint8_t Line, uint8_t x)
 {
     if (Line==0)
@@ -243,7 +278,11 @@ void LCD_SetCursor(uint8_t Line, uint8_t x)
 
 }
 
-
+/**
+ * @brief Writes a 4-digit number to the LCD.
+ *
+ * @param num The 4-digit number to be written.
+ */
 void LCD_WriteNumber_4D(uint16_t num)
 {
         LCD_WriteData(((num%10000)/1000)+'0');
@@ -252,6 +291,11 @@ void LCD_WriteNumber_4D(uint16_t num)
         LCD_WriteData(((num%10)/1)+'0');
 }
 
+/**
+ * @brief Writes a 3-digit number to the LCD.
+ *
+ * @param num The 3-digit number to be written.
+ */
 void LCD_WriteNumber_3D(uint16_t num)
 {
         LCD_WriteData(((num%1000)/100)+'0');
@@ -260,6 +304,11 @@ void LCD_WriteNumber_3D(uint16_t num)
 }
 
 
+/**
+ * @brief Writes a 2-digit number to the LCD.
+ *
+ * @param num The 2-digit number to be written.
+ */
 void LCD_WriteNumber_2D(uint16_t num)
 {
         LCD_WriteData(((num%100)/10)+'0');

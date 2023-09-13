@@ -40,16 +40,43 @@ typedef enum
 
 
 
+/**
+ * @brief Initializes the DC motors and associated pins.
+ */
+void motors_Init(void);
 
+/**
+ * @brief Turns the car in one direction (e.g., clockwise).
+ */
+void Turn_oneDirection(void);
 
+/**
+ * @brief Turns the car in the opposite direction (e.g., counterclockwise).
+ */
+void Turn_OtherDirection(void);
 
+/**
+ * @brief Turns the car in the specified direction by adjusting motor speeds and control pins.
+ *
+ * @param dir The direction to turn the car (LEFT, RIGHT, or REVERSE).
+ * @param angle The angle by which to turn the car.
+ */
 void turn_Car(CarDirType dir, uint8_t angle);
 
+/**
+ * @brief Moves the car forward with a specified PWM value.
+ *
+ * @param pwm The PWM value that controls the motor speed.
+ */
 void move_Forward(uint32_t pwm);
 
+/**
+ * @brief Moves the car backward with a specified PWM value.
+ *
+ * @param pwm The PWM value that controls the motor speed.
+ */
 void move_Backward(uint32_t pwm);
 
 
-void motors_Init(void);
 
 #endif /* DC_MOTOR_DC_MOTOR_H_ */

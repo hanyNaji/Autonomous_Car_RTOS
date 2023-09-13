@@ -8,7 +8,9 @@
 #include "DC_motor.h"
 
 
-
+/**
+ * @brief Initializes the DC motors and associated pins.
+ */
 void motors_Init(void)
 {
     GPTM_PWM_init(M1_TIMER, MOTOR1_PWM);
@@ -23,7 +25,9 @@ void motors_Init(void)
 
 
 
-
+/**
+ * @brief Turns the car in one direction (e.g., clockwise).
+ */
 void Turn_oneDirection(void)
 {
      SYSCTL_RCGCGPIO_R |= 0x01;   /* enable clock to PORTF */
@@ -36,6 +40,9 @@ void Turn_oneDirection(void)
 
 }
 
+/**
+ * @brief Turns the car in the opposite direction (e.g., counterclockwise).
+ */
 void Turn_OtherDirection(void)
 {
     SYSCTL_RCGCGPIO_R |= 0x01;   /* enable clock to PORTF */
@@ -45,7 +52,12 @@ void Turn_OtherDirection(void)
     GPIO_PORTA_DATA_R &=~(1<<2);
 }
 
-
+/**
+ * @brief Turns the car in the specified direction by adjusting motor speeds and control pins.
+ *
+ * @param dir The direction to turn the car (LEFT, RIGHT, or REVERSE).
+ * @param angle The angle by which to turn the car.
+ */
 void turn_Car(CarDirType dir, uint8_t angle)
 {
 
@@ -85,7 +97,11 @@ void turn_Car(CarDirType dir, uint8_t angle)
     GPTM_PWM_Duty_Cycle(M2_TIMER, 30);
 }
 
-
+/**
+ * @brief Moves the car forward with a specified PWM value.
+ *
+ * @param pwm The PWM value that controls the motor speed.
+ */
 void move_Forward(uint32_t pwm)
 {
     GPTM_PWM_Duty_Cycle (M1_TIMER, pwm);
@@ -96,6 +112,11 @@ void move_Forward(uint32_t pwm)
     DIO_WritePin(MOTOR2_CTL_2, LOW);
 }
 
+/**
+ * @brief Moves the car backward with a specified PWM value.
+ *
+ * @param pwm The PWM value that controls the motor speed.
+ */
 void move_Backward(uint32_t pwm)
 {
 

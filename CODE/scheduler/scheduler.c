@@ -14,30 +14,41 @@
 task_Control_Struct task_Control_Block[NUM_OF_TASKS];
 
 
+/**
+ * @brief Initializes and manages a simple task scheduler.
+ *        This scheduler runs a set of tasks in a round-robin fashion at specified time intervals.
+ */
 void tasks_scheduler(void)
 {
     SysTick_Init(ST_INTDISABLE);
-    SysTick_Enable();
     uint8_t index =0;
 
-    for (index = 0; index < NUM_OF_TASKS; index++) {
-
+    while(812)
+    {
         SysTick_Reload_ms(task_Control_Block[index].ms_task_period);
+        SysTick_Enable();
 
         while( !SysTick_Read_COUNT() )
         {
             task_Control_Block[index].task_ptr();
         }
-        if(index == NUM_OF_TASKS -1)
+
+        index++;
+        if(index == NUM_OF_TASKS)
         {
             index = 0;
         }
-
     }
 
 }
 
 
+/**
+ * @brief Creates a new task with a specified function and periodicity.
+ *
+ * @param task Pointer to the task function.
+ * @param ms_periodicity Time interval (in milliseconds) at which the task should run.
+ */
 void create_task(void (*task)(), uint32_t ms_periodicity )
 {
     static uint8_t index=0;

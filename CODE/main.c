@@ -27,8 +27,8 @@
 /******* #Defines - MACROs *******/
 
 #define TASK_1_PERIOD   10U
-#define TASK_2_PERIOD   45U
-#define TASK_3_PERIOD   15U
+#define TASK_2_PERIOD   10U
+#define TASK_3_PERIOD   5U
 
 
 #define RED_LED    PF1
@@ -179,7 +179,7 @@ void Task_3(void);
 void Task_3(void)
 {
     /* Read ultraSonic value */
-    ultraSonic_read = ultraSonic_Read_CM();     /*max time 15ms approximately*/
+    ultraSonic_read = ultraSonic_Read_CM();     /*max time 2.63ms approximately*/
 
     if(start_flag)
     {

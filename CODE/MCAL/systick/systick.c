@@ -44,7 +44,8 @@ void SysTick_Enable(void)
  */
 uint8_t SysTick_Read_COUNT(void)
 {
-    return READ_BIT(NVIC_ST_CTRL_R, 16);
+    uint8_t read = READ_BIT(NVIC_ST_CTRL_R, 16);
+    return read;
 }
 
 /**
