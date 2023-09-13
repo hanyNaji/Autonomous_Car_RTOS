@@ -30,7 +30,7 @@
 #define LED_BLU     (PF2)  /* PF1/LEDB */
 #define LED_GRN     (PF3)  /* PF2/LEDG */
 
-#define TASK_1_PERIOD   100U
+#define TASK_1_PERIOD   10U
 #define TASK_2_PERIOD   45U
 #define TASK_3_PERIOD   15U
 
@@ -130,8 +130,8 @@ void Task_1(void)
     if(start_flag)
     {
         /* Read left LDR, and right LDR values */
-        ldr_left_Read = LDR_Left_Read();
-        ldr_right_Read = LDR_Right_Read();
+        ldr_left_Read = LDR_Left_Read();        /*1ms*/
+        ldr_right_Read = LDR_Right_Read();      /*1ms*/
         ldrs_Difference = ldr_left_Read - ldr_right_Read;
 
         if(ldrs_Difference > 150 ){
@@ -163,16 +163,16 @@ void Task_1(void)
 void Task_2(void);
 void Task_2(void)
 {
-
     /* Read temperature value */
-    temperature_Read = Temperature_Read(CH_0);
+    temperature_Read = Temperature_Read(CH_0);      /*1ms*/
     /* Read ultraSonic value */
-    ultraSonic_read = ultraSonic_Read_CM();     /*max time 15ms*/
+    ultraSonic_read = ultraSonic_Read_CM();     /*max time 2.63ms*/
 
     /* Display temperature, ultraSonic_read, LDR difference on LCD */
-    LCD_Display(temperature_Read, ultraSonic_read, ldrs_Difference, elapsed_time_S);    /*6.8ms / max time 15ms*/
+    LCD_Display(temperature_Read, ultraSonic_read, ldrs_Difference, elapsed_time_S);    /*11.2ms / max = 13ms*/
 
 }
+
 
 /**
  * @brief Task 3 function that performs ultraSonic reading,
@@ -265,16 +265,14 @@ void main(void)
 
 void LCD_Display(uint32_t temp, uint32_t ultra, uint32_t ldr_diff, uint32_t elapsed_time)
 {
-    /* 6.8 ms */
-    LCD_SetCursor(0, 0);     /* 800us */
-    LCD_WriteString("T= ");   /* (800us*chars) */
+    /* 11.2 ms */
+    LCD_SetCursor(0, 3);     /* 800us */
     LCD_WriteNumber_2D(temp);   /* 800us*2 */
-    LCD_WriteString(" | US= ");
+    LCD_SetCursor(0, 12);     /* 800us */
     LCD_WriteNumber_3D(ultra);
-    LCD_SetCursor(1, 0);
-    LCD_WriteString("LDR: ");
+    LCD_SetCursor(1, 5);
     LCD_WriteNumber_3D(ldr_diff);
-    LCD_WriteString(" | ET= ");
+    LCD_SetCursor(1, 13);     /* 800us */
     LCD_WriteNumber_2D(elapsed_time);
 }
 

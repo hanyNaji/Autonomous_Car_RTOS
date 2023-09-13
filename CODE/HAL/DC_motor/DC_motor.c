@@ -79,6 +79,7 @@ void turn_Car(CarDirType dir, uint8_t angle)
             return 0x00;
             break;
     }
+
     _delay_ms(30 * angle/10);
 
     GPTM_PWM_Duty_Cycle(M1_TIMER, 30);

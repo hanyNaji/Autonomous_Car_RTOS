@@ -143,6 +143,19 @@ void LCD_Init(void)
     LCD_WriteCommand(0x06);     //DDRAM address increase
     //_delay_us(200);
     //LCD_WriteCommand(0x80);
+
+
+    /* 6.8 ms */
+    LCD_SetCursor(0, 0);     /* 800us */
+    LCD_WriteString("T= ");   /* (800us*chars) */
+    LCD_WriteNumber_2D(0);   /* 800us*2 */
+    LCD_WriteString(" | US= ");
+    LCD_WriteNumber_3D(0);
+    LCD_SetCursor(1, 0);
+    LCD_WriteString("LDR: ");
+    LCD_WriteNumber_3D(0);
+    LCD_WriteString(" | ET= ");
+    LCD_WriteNumber_2D(0);
 }
 #endif
 
