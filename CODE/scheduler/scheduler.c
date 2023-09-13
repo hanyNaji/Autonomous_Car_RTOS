@@ -18,18 +18,21 @@ void tasks_scheduler(void)
 {
     SysTick_Init(ST_INTDISABLE);
     SysTick_Enable();
-    while(812)
-    {
-        uint8_t index =0;
-        for (index = 0; index < NUM_OF_TASKS; index++) {
-            SysTick_Reload_ms(task_Control_Block[index].ms_task_period);
+    uint8_t index =0;
 
-            while( !SysTick_Read_COUNT() )
-            {
-                task_Control_Block[index].task_ptr();
-            }
+    for (index = 0; index < NUM_OF_TASKS; index++) {
 
+        SysTick_Reload_ms(task_Control_Block[index].ms_task_period);
+
+        while( !SysTick_Read_COUNT() )
+        {
+            task_Control_Block[index].task_ptr();
         }
+        if(index == NUM_OF_TASKS -1)
+        {
+            index = 0;
+        }
+
     }
 
 }
