@@ -26,7 +26,7 @@ The project utilizes a modular architecture with separate layers for hardware ab
 Before running the project, make sure to configure the following parameters:
 
 - Task periods (`TASK_1_PERIOD`, `TASK_2_PERIOD`, `TASK_3_PERIOD`): Adjust the timing intervals for different tasks.
-- GPIO pins (`RED_LED`, `BLUE_LED`, `GREEN_LED`, `SW1`, `SW2`): Configure the GPIO pins for LEDs and switches according to your hardware setup.
+- GPIO pins (`SW1`, `SW2`): Configure the GPIO pins for LEDs and switches according to your hardware setup.
 - Maximum obstacle distance (`max_Obestacle_Distance`): Set the maximum obstacle distance (in centimeters) for obstacle avoidance.
 
 ## Tasks
