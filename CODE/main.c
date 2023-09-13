@@ -24,11 +24,7 @@
 #include "scheduler/scheduler.h"
 
 
-
 /******* #Defines - MACROs *******/
-#define LED_RED     (PF1)  /* PF3/LEDR */
-#define LED_BLU     (PF2)  /* PF1/LEDB */
-#define LED_GRN     (PF3)  /* PF2/LEDG */
 
 #define TASK_1_PERIOD   10U
 #define TASK_2_PERIOD   45U
@@ -49,7 +45,7 @@ volatile uint8_t start_flag = 0;
 uint32_t temperature_Read = 0;
 uint32_t ldr_left_Read = 0;
 uint32_t ldr_right_Read = 0;
-uint32_t ldrs_Difference = 0;
+int32_t ldrs_Difference = 0;
 uint32_t ultraSonic_read = 0;
 
 volatile uint8_t  elapsed_time_S ;        /* To calculate seconds of the stop watch */
@@ -127,13 +123,14 @@ void GPIOF_Handler(void)
 void Task_1(void);
 void Task_1(void)
 {
+
+    /* Read left LDR, and right LDR values */
+    ldr_left_Read = LDR_Left_Read();        /*1ms*/
+    ldr_right_Read = LDR_Right_Read();      /*1ms*/
+    ldrs_Difference = ldr_left_Read - ldr_right_Read;
+
     if(start_flag)
     {
-        /* Read left LDR, and right LDR values */
-        ldr_left_Read = LDR_Left_Read();        /*1ms*/
-        ldr_right_Read = LDR_Right_Read();      /*1ms*/
-        ldrs_Difference = ldr_left_Read - ldr_right_Read;
-
         if(ldrs_Difference > 150 ){
             /* Swing Right */
             /* motors fun here */
@@ -181,11 +178,11 @@ void Task_2(void)
 void Task_3(void);
 void Task_3(void)
 {
+    /* Read ultraSonic value */
+    ultraSonic_read = ultraSonic_Read_CM();     /*max time 15ms approximately*/
+
     if(start_flag)
     {
-        /* Read ultraSonic value */
-        ultraSonic_read = ultraSonic_Read_CM();     /*max time 15ms approximately*/
-
         if(ultraSonic_read <= max_Obestacle_Distance){
             /* Move backward then rotate 90 degree */
             /* motors fun here */
@@ -218,6 +215,11 @@ void main(void)
     DIO_PORT_Init(PORTB);
     DIO_PORT_Init(PORTC);
     DIO_PORT_Init(PORTF);
+
+    DIO_InitPin(SW1, INLLUP);
+    DIO_InitPin(SW2, INLLUP);
+    Interrupt_Edge_InitPin(SW1, LOW_EDGE);
+    Interrupt_Edge_InitPin(SW2, LOW_EDGE);
 
     /*** UltraSonic ***/
     ultraSonic_Init(TRIG_PIN, ECHO_PIN);

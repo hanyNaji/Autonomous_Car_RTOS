@@ -76,7 +76,6 @@ void turn_Car(CarDirType dir, uint8_t angle)
             DIO_WritePin(MOTOR2_CTL_2, HIGH);
             break;
         default:
-            return 0x00;
             break;
     }
 
