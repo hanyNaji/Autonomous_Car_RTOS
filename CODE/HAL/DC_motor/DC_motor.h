@@ -2,7 +2,7 @@
  * DC_motor.h
  *
  *  Created on: Aug 31, 2023
- *      Author: hanyt
+ *      Author: hany Nagy
  */
 
 #ifndef DC_MOTOR_DC_MOTOR_H_
