@@ -65,7 +65,6 @@ GPTM_Struct GPTM_Timer0 = {
 
 /********** Functions prototypes ***********/
 void LCD_Display(uint32_t temp, uint32_t ultra, uint32_t ldr_diff, uint32_t elapsed_time);
-void car_Stop(void);
 
 
 /************ Interrupts ************/
@@ -275,11 +274,4 @@ void LCD_Display(uint32_t temp, uint32_t ultra, uint32_t ldr_diff, uint32_t elap
 }
 
 
-void car_Stop(void)
-{
-    DIO_WritePin(MOTOR1_CTL_1, LOW);
-    DIO_WritePin(MOTOR1_CTL_2, LOW);
-    DIO_WritePin(MOTOR2_CTL_1, LOW);
-    DIO_WritePin(MOTOR2_CTL_2, LOW);
-}
 
