@@ -77,6 +77,11 @@ void move_Forward(uint32_t pwm);
  */
 void move_Backward(uint32_t pwm);
 
+/**
+ * @brief stops the car at once.
+ */
+void car_Stop(void);
+
 
 
 #endif /* DC_MOTOR_DC_MOTOR_H_ */
