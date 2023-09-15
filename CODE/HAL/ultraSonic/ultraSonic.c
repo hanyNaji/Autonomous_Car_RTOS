@@ -78,7 +78,7 @@ uint32_t ultraSonic_Read_CM(void)
     DIO_WritePin(trig_pin, LOW);
 
     readtime = TimerA_Capture_PulseWidth(TIMER_W0, echo_pin);   /* Reading the wave (ON) time */
-    dist = ((readtime/16/2) * 29) + 1;     /* Ultra-Sonic Equation to get correct distance sound speed = 29us/cm */
+    dist = ((readtime/16/2) / 29) + 1;     /* Ultra-Sonic Equation to get correct distance sound speed = 29us/cm */
 
     return dist;
 }

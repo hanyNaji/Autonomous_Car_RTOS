@@ -1,0 +1,34 @@
+epins_template
+ Created on: Sep 14, 2023
+     Author: hany
+     
+     
+#define MOTOR1_PWM     (PF2)  /* MOTOR PWM 1 */    /* Data sheet page 1351 */
+#define MOTOR2_PWM     (PB2)  /* MOTOR PWM 2 */
+
+#define MOTOR1_CTL_1     (PB0)  /* MOTOR 1 control pin 1 */
+#define MOTOR1_CTL_2     (PB1)  /* MOTOR 1 control pin 2 */
+#define MOTOR2_CTL_1     (PB6)  /* MOTOR 2 control pin 1 */
+#define MOTOR2_CTL_2     (PB7)  /* MOTOR 2 control pin 2 */
+
+#define M1_TIMER        (TIMER1)
+#define M2_TIMER        (TIMER3)
+
+
+
+#define   D4     (PC6)
+#define   D5     (PA5)
+#define   D6     (PA6)
+#define   D7     (PA7)
+
+
+#define   RS     (PA2)
+#define   RW     (PA3)
+#define   EN     (PA4)
+
+
+
+#define TRIG_PIN     (PC5)  /* for signal out pin */
+#define ECHO_PIN     (PC4)  /* for capture pin */
+
+

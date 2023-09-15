@@ -34,7 +34,7 @@ static void NmiSR(void);
 static void FaultISR(void);
 static void IntDefaultHandler(void);
 
-void Int_Timer0A_Handler(void);
+void Int_Timer_Handler(void);
 void GPIOF_Handler(void);
 
 //*****************************************************************************
@@ -105,8 +105,8 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // ADC Sequence 2
     IntDefaultHandler,                      // ADC Sequence 3
     IntDefaultHandler,                      // Watchdog timer
-    Int_Timer0A_Handler,                      // Timer 0 subtimer A
-    IntDefaultHandler,                      // Timer 0 subtimer B
+    Int_Timer_Handler,                      // Timer 0 subtimer A
+    Int_Timer_Handler,                      // Timer 0 subtimer B
     IntDefaultHandler,                      // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
     IntDefaultHandler,                      // Timer 2 subtimer A
@@ -184,8 +184,8 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Wide Timer 0 subtimer B
     IntDefaultHandler,                      // Wide Timer 1 subtimer A
     IntDefaultHandler,                      // Wide Timer 1 subtimer B
-    IntDefaultHandler,                      // Wide Timer 2 subtimer A
-    IntDefaultHandler,                      // Wide Timer 2 subtimer B
+    Int_Timer_Handler,                      // Wide Timer 2 subtimer A
+    Int_Timer_Handler,                      // Wide Timer 2 subtimer B
     IntDefaultHandler,                      // Wide Timer 3 subtimer A
     IntDefaultHandler,                      // Wide Timer 3 subtimer B
     IntDefaultHandler,                      // Wide Timer 4 subtimer A

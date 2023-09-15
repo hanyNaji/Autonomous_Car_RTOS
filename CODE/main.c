@@ -18,6 +18,7 @@
 #include "HAL/LCD_Driver/LCD_Driver.h"
 #include "HAL/DC_motor/DC_motor.h"
 #include "HAL/Sensors/Sensor.h"
+#include <math.h>
 
 /*** Application ***/
 /* scheduler */
@@ -26,9 +27,9 @@
 
 /******* #Defines - MACROs *******/
 
-#define TASK_1_PERIOD   10U
-#define TASK_2_PERIOD   10U
-#define TASK_3_PERIOD   5U
+#define TASK_1_PERIOD   50U
+#define TASK_2_PERIOD   56U
+#define TASK_3_PERIOD   50U
 
 
 #define SW1    PF4
@@ -42,7 +43,8 @@ uint32_t temperature_Read = 0;
 uint32_t ldr_left_Read = 0;
 uint32_t ldr_right_Read = 0;
 int32_t ldrs_Difference = 0;
-uint32_t ultraSonic_read = 0;
+uint32_t ultraSonic_read = 20;
+Output_Value_Type toggle = LOW;
 
 volatile uint8_t  elapsed_time_S ;        /* To calculate seconds of the stop watch */
 
@@ -50,7 +52,7 @@ GPTM_Struct GPTM_Timer0 = {
     TIMER0,           /* Timer type */
     0x00UL,             /* Pre-scale value */
     PERIODIC,            /* Timer mode */
-    UNCONCAT,           /* Concatenation mode */
+    CONCAT,           /* Concatenation mode */
     EDGE_TIME,          /* Capture mode */
     CC_MODE,            /* Timer alternate mode */
     COUNT_DWON,           /* Timer count direction */
@@ -64,23 +66,28 @@ GPTM_Struct GPTM_Timer0 = {
 };
 
 /********** Functions prototypes ***********/
-void LCD_Display(uint32_t temp, uint32_t ultra, uint32_t ldr_diff, uint32_t elapsed_time);
+void LCD_Display(uint32_t temp, uint32_t ultra, int32_t ldr_diff, uint32_t elapsed_time);
 
 
 /************ Interrupts ************/
-void Int_Timer0A_Handler(void)
+void Int_Timer_Handler(void)
 {
     TIMER0_ICR_R |=(1U<<0);
-
     if(elapsed_time_S==59U){
         elapsed_time_S = 0U;
         start_flag = 0;
         car_Stop();
         GPTM_Disable(GPTM_Timer0.timer);
+        DIO_WritePin(PF1, HIGH);
+        DIO_WritePin(PF2, LOW);
     }
     else {
         elapsed_time_S++;
+        toggle = !toggle;
+        DIO_WritePin(PF3, toggle);
+
     }
+
 }
 
 /* GPIO PORTF Interrupt handler */
@@ -93,6 +100,7 @@ void GPIOF_Handler(void)
         start_flag = 0;
         car_Stop();
         GPTM_Disable(GPTM_Timer0.timer);
+        DIO_WritePin(PF1, HIGH);
     }
     else if (GPIO_PORTF_MIS_R & (unsigned long)(1U<<(SW2%8))) /* check if interrupt causes by PF0/SW2 */
     {
@@ -102,6 +110,8 @@ void GPIOF_Handler(void)
         /* Enable timer to start counting*/
         GPTM_Enable(GPTM_Timer0.timer);
         GPTM_TAILR_Value_Loud(GPTM_Timer0.timer, 16000000); /*Int for 1 second*/
+        DIO_WritePin(PF1, LOW);
+        DIO_WritePin(PF2, LOW);
     }
     else {
         /* Do nothing for MISRA */
@@ -157,11 +167,12 @@ void Task_2(void)
 {
     /* Read temperature value */
     temperature_Read = Temperature_Read(CH_0);      /*1ms*/
+
     /* Read ultraSonic value */
     ultraSonic_read = ultraSonic_Read_CM();     /*max time 2.63ms*/
 
     /* Display temperature, ultraSonic_read, LDR difference on LCD */
-    LCD_Display(temperature_Read, ultraSonic_read, ldrs_Difference, elapsed_time_S);    /*11.2ms / max = 13ms*/
+    LCD_Display(temperature_Read, ultraSonic_read, ldrs_Difference, elapsed_time_S);    /*56ms / max = 128ms*/
 
 }
 
@@ -178,7 +189,8 @@ void Task_3(void)
 
     if(start_flag)
     {
-        if(ultraSonic_read <= max_Obestacle_Distance){
+        if(ultraSonic_read <= max_Obestacle_Distance)
+        {
             /* Move backward then rotate 90 degree */
             /* motors fun here */
             move_Backward(SPEED/2);
@@ -206,13 +218,15 @@ void main(void);
 void main(void)
 {
     /*********** Hardware Initialization (START) ************/
-    DIO_PORT_Init(PORTA);
-    DIO_PORT_Init(PORTB);
-    DIO_PORT_Init(PORTC);
+    __asm(" CPSIE  I");
+
     DIO_PORT_Init(PORTF);
 
     DIO_InitPin(SW1, INLLUP);
     DIO_InitPin(SW2, INLLUP);
+    DIO_InitPin(PF1, OUTPUT);
+    DIO_InitPin(PF2, OUTPUT);
+    DIO_InitPin(PF3, OUTPUT);
     Interrupt_Edge_InitPin(SW1, LOW_EDGE);
     Interrupt_Edge_InitPin(SW2, LOW_EDGE);
 
@@ -232,6 +246,8 @@ void main(void)
     /*** LCD ***/
     /* Initialize LCD and all its connected pins*/
     LCD_Init();
+    LCD_WriteString("  Hello..");
+    _delay_ms(500);
 
     /* Timer0 initialization for time elapsed measurement */
     GPTM_Init(&GPTM_Timer0);
@@ -260,17 +276,20 @@ void main(void)
 }
 
 
-void LCD_Display(uint32_t temp, uint32_t ultra, uint32_t ldr_diff, uint32_t elapsed_time)
+void LCD_Display(uint32_t temp, uint32_t ultra, int32_t ldr_diff, uint32_t elapsed_time)
 {
-    /* 11.2 ms */
-    LCD_SetCursor(0, 3);     /* 800us */
-    LCD_WriteNumber_2D(temp);   /* 800us*2 */
-    LCD_SetCursor(0, 12);     /* 800us */
+    ldr_diff = abs(ldr_diff);
+
+    /*56ms*/
+    LCD_SetCursor(0, 3);     /* 4ms */
+    LCD_WriteNumber_2D(temp);   /* 4ms*2 */
+    LCD_SetCursor(0, 12);
     LCD_WriteNumber_3D(ultra);
-    LCD_SetCursor(1, 5);
-    LCD_WriteNumber_3D(ldr_diff);
-    LCD_SetCursor(1, 13);     /* 800us */
+    LCD_SetCursor(1, 4);
+    LCD_WriteNumber_4D(ldr_diff);
+    LCD_SetCursor(1, 13);
     LCD_WriteNumber_2D(elapsed_time);
+
 }
 
 

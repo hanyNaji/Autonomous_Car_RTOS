@@ -176,12 +176,14 @@ void GPTM_Init(GPTM_Struct *st_timer)
             INSERT_BIT(TIMER0_CTL_R, 0UL, 0UL);
             switch(st_timer->mode){
                 case ONE_SHOT:
-                    TIMER0_CFG_R = 0x00000000;
-                    INSERT_BITS(TIMER0_TAMR_R, st_timer->mode, 0UL, 2UL);
-                    INSERT_BIT(TIMER0_TAMR_R, 4UL, st_timer->dirMode);
-                    INSERT_BIT(TIMER0_IMR_R, 0UL, st_timer->intType);
-                    break;
                 case PERIODIC:
+                    TIMER0_CFG_R = 0x00000000;
+                    TIMER0_TAMR_R = 0x02;
+//                    INSERT_BITS(TIMER0_TAMR_R, st_timer->mode, 0UL, 2UL);
+                    TIMER0_TAMR_R |= (1<<4);
+//                    INSERT_BIT(TIMER0_TAMR_R, 4UL, st_timer->dirMode);
+                    INSERT_BIT(TIMER0_IMR_R, 0UL, st_timer->intType);
+                    INSERT_BIT(NVIC_EN0_R, 19UL, 1U);
                     break;
                 case CAPTURE:
                     INSERT_BIT(TIMER0_CFG_R, 2UL, 1UL);
@@ -193,7 +195,7 @@ void GPTM_Init(GPTM_Struct *st_timer)
                 default:
                     break;
             }
-            TIMER0_TAPR_R = (uint32_t)st_timer->preScale;
+//            TIMER0_TAPR_R = (uint32_t)st_timer->preScale;
             break;
         case TIMER1:
             INSERT_BIT(SYSCTL_RCGCTIMER_R, 1UL, 1UL);
@@ -367,6 +369,7 @@ void GPTM_Init(GPTM_Struct *st_timer)
                     INSERT_BITS(WTIMER2_TAMR_R, st_timer->mode, 0UL, 2UL);
                     INSERT_BIT(WTIMER2_TAMR_R, 4UL, st_timer->dirMode);
                     INSERT_BIT(WTIMER2_IMR_R, 0UL, st_timer->intType);
+                    INSERT_BIT(NVIC_EN0_R, 19UL, 1U);
                     break;
                 case CAPTURE:
                     INSERT_BIT(WTIMER2_CFG_R, 2UL, 1UL);
@@ -513,26 +516,28 @@ void GPTM_TAILR_Value_Loud(GPTM_Type timer_N, uint32_t value)
  */
 void GPTM_CCP_PinInit(DIO_AllPINS_TYPE pin)
 {
-    uint8_t Port_N = (uint8_t) pin / 8;
+    uint8_t Port_N = pin / PB0;
+    uint8_t pin_num = pin % PB0;
+
     switch (Port_N)
     {
         case PORTA:
-            INSERT_BITS(GPIO_PORTA_PCTL_R, 0x07UL, 16UL, 4UL);
+            INSERT_BITS(GPIO_PORTA_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             break;
         case PORTB:
-            INSERT_BITS(GPIO_PORTB_PCTL_R, 0x07UL, 16UL, 4UL);
+            INSERT_BITS(GPIO_PORTB_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             break;
         case PORTC:
-            INSERT_BITS(GPIO_PORTC_PCTL_R, 0x07UL, 16UL, 4UL);
+            INSERT_BITS(GPIO_PORTC_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             break;
         case PORTD:
-            INSERT_BITS(GPIO_PORTD_PCTL_R, 0x07UL, 16UL, 4UL);
+            INSERT_BITS(GPIO_PORTD_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             break;
         case PORTE:
-            INSERT_BITS(GPIO_PORTE_PCTL_R, 0x07UL, 16UL, 4UL);
+            INSERT_BITS(GPIO_PORTE_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             break;
         case PORTF:
-            INSERT_BITS(GPIO_PORTF_PCTL_R, 0x07UL, 16UL, 4UL);
+            INSERT_BITS(GPIO_PORTF_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             break;
         default:
             break;
@@ -659,12 +664,13 @@ uint32_t TimerA_Capture_PulseWidth(GPTM_Type timer_N, DIO_AllPINS_TYPE ccp_pin)
         case TIMER_W0:
             while(1)
             {
+
                 INSERT_BIT(WTIMER0_ICR_R, 2UL, 1UL);                /* clear WTIMER0A capture flag */
-                while(! DIO_ReadPin(ccp_pin));               /* wait till captured */
+                while(!DIO_ReadPin(ccp_pin));               /* wait till captured */
                 risingEdge = WTIMER0_TAR_R;     /* save the timestamp */
                 /* detect falling edge */
                 INSERT_BIT(WTIMER0_ICR_R, 2UL, 1UL);                /* clear WTIMER0A capture flag */
-                while(DIO_ReadPin(ccp_pin));                 /* wait till captured */
+                while(!DIO_ReadPin(ccp_pin));               /* wait till captured */
                 fallingEdge = WTIMER0_TAR_R;    /* save the timestamp */
                 return (fallingEdge - risingEdge);     /* return the time difference */
             }
@@ -949,38 +955,38 @@ void GPTM_PWM_PinInit(DIO_AllPINS_TYPE pin)
     {
         case PORTA:
             DIO_PORT_Init(PORTA);
-            GPIO_PORTA_AFSEL_R |= (1 << pin_num);         /* Data sheet page 671 */
-            GPIO_PORTA_PCTL_R |= (0x07 << (pin_num*4));     /* Data sheet page 688 */
+            INSERT_BIT(GPIO_PORTA_AFSEL_R, pin_num, 1UL);               /* Data sheet page 671 */
+            INSERT_BITS(GPIO_PORTA_PCTL_R, 0x07UL, pin_num*4UL, 4UL);   /* Data sheet page 688 */
             DIO_InitPin(pin, OUTPUT);
             break;
         case PORTB:
             DIO_PORT_Init(PORTB);
-            GPIO_PORTB_AFSEL_R |= (1 << pin_num);         /* Data sheet page 671 */
-            GPIO_PORTB_PCTL_R |= (0x07<<(pin_num*4));     /* Data sheet page 688 */
+            INSERT_BIT(GPIO_PORTB_AFSEL_R, pin_num, 1UL);
+            INSERT_BITS(GPIO_PORTB_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             DIO_InitPin(pin, OUTPUT);
             break;
         case PORTC:
             DIO_PORT_Init(PORTC);
-            GPIO_PORTC_AFSEL_R |= (1 << pin_num);         /* Data sheet page 671 */
-            GPIO_PORTC_PCTL_R |= (0x07<<(pin_num*4));     /* Data sheet page 688 */
+            INSERT_BIT(GPIO_PORTC_AFSEL_R, pin_num, 1UL);
+            INSERT_BITS(GPIO_PORTC_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             DIO_InitPin(pin, OUTPUT);
             break;
         case PORTD:
             DIO_PORT_Init(PORTD);
-            GPIO_PORTD_AFSEL_R |= (1 << pin_num);         /* Data sheet page 671 */
-            GPIO_PORTD_PCTL_R |= (0x07<<(pin_num*4));     /* Data sheet page 688 */
+            INSERT_BIT(GPIO_PORTD_AFSEL_R, pin_num, 1UL);
+            INSERT_BITS(GPIO_PORTD_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             DIO_InitPin(pin, OUTPUT);
             break;
         case PORTE:
             DIO_PORT_Init(PORTE);
-            GPIO_PORTE_AFSEL_R |= (1 << pin_num);         /* Data sheet page 671 */
-            GPIO_PORTE_PCTL_R |= (0x07<<(pin_num*4));     /* Data sheet page 688 */
+            INSERT_BIT(GPIO_PORTE_AFSEL_R, pin_num, 1UL);
+            INSERT_BITS(GPIO_PORTE_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             DIO_InitPin(pin, OUTPUT);
             break;
         case PORTF:
             DIO_PORT_Init(PORTF);
-            GPIO_PORTF_AFSEL_R |= (1 << pin_num);         /* Data sheet page 671 */
-            GPIO_PORTF_PCTL_R |= (0x07<<(pin_num*4));     /* Data sheet page 688 */
+            INSERT_BIT(GPIO_PORTF_AFSEL_R, pin_num, 1UL);
+            INSERT_BITS(GPIO_PORTF_PCTL_R, 0x07UL, pin_num*4UL, 4UL);
             DIO_InitPin(pin, OUTPUT);
             break;
         default:

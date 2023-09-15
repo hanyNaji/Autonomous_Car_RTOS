@@ -98,7 +98,7 @@ uint16_t ADC_Read(ADC_Base BASE, ADC_CH_TYPE ch, ADC_sequencer sequencer)
         case ADC_sequencer_0:
             ADC0_SSMUX0_R = (ADC0_SSMUX0_R & 0xFFFFFFF0U) | ch;    /* Select ADC input channel */
             INSERT_BIT(ADC0_PSSI_R, 0, 1);                          /* Initiate the ADC conversion for Sample Sequencer 0 */
-            while (!READ_BIT(ADC0_RIS_R, 0x01U))                    /* Wait for conversion to complete */
+            while (!READ_BIT(ADC0_RIS_R, 0U))                    /* Wait for conversion to complete */
             {
             }
             value = ADC0_SSFIFO0_R;                                 /* Read the converted value */
@@ -107,7 +107,7 @@ uint16_t ADC_Read(ADC_Base BASE, ADC_CH_TYPE ch, ADC_sequencer sequencer)
         case ADC_sequencer_1:
             ADC0_SSMUX1_R = (ADC0_SSMUX1_R & 0xFFFFFFF0U) | ch;    /* Select ADC input channel */
             INSERT_BIT(ADC0_PSSI_R, 1, 1);                          /* Initiate the ADC conversion for Sample Sequencer 1 */
-            while (!READ_BIT(ADC0_RIS_R, 0x02U))                    /* Wait for conversion to complete */
+            while (!READ_BIT(ADC0_RIS_R, 1U))                    /* Wait for conversion to complete */
             {
             }
             value = ADC0_SSFIFO1_R;                                 /* Read the converted value */
@@ -116,7 +116,7 @@ uint16_t ADC_Read(ADC_Base BASE, ADC_CH_TYPE ch, ADC_sequencer sequencer)
         case ADC_sequencer_2:
             ADC0_SSMUX2_R = (ADC0_SSMUX2_R & 0xFFFFFFF0U) | ch;    /* Select ADC input channel */
             INSERT_BIT(ADC0_PSSI_R, 2, 1);                          /* Initiate the ADC conversion for Sample Sequencer 2 */
-            while (!READ_BIT(ADC0_RIS_R, 0x04U))                    /* Wait for conversion to complete */
+            while (!READ_BIT(ADC0_RIS_R, 2U))                    /* Wait for conversion to complete */
             {
             }
             value = ADC0_SSFIFO2_R;                                 /* Read the converted value */
@@ -125,7 +125,7 @@ uint16_t ADC_Read(ADC_Base BASE, ADC_CH_TYPE ch, ADC_sequencer sequencer)
         case ADC_sequencer_3:
             ADC0_SSMUX3_R = (ADC0_SSMUX3_R & 0xFFFFFFF0U) | ch;    /* Select ADC input channel */
             INSERT_BIT(ADC0_PSSI_R, 3, 1);                          /* Initiate the ADC conversion for Sample Sequencer 3 */
-            while (READ_BIT(ADC0_RIS_R, 0x08U))                     /* Wait for conversion to complete */
+            while (READ_BIT(ADC0_RIS_R, 3U))                     /* Wait for conversion to complete */
             {
             }
             value = ADC0_SSFIFO3_R;                                 /* Read the converted value */

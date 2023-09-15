@@ -64,7 +64,7 @@ uint16_t Temperature_Read(uint8_t Channel)
     ADC0_ISC_R = (1U << 3);
 
     /* Conversion formula to calculate temperature */
-    result = (1475 - ((750 * 33 * (float)result) / 4096));
+    result = (147.5 - (((float)75 * 3.3 * (float)result) / 4096));
 
     return result;
 }

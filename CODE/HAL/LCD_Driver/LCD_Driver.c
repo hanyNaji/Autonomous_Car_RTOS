@@ -13,7 +13,7 @@ void LCD_WriteCommand(uint8_t command)
 {
     DIO_WritePin(RS, LOW);
     DIO_WritePin(RW, LOW);
-//    DIO_WritePort(LCD_PORT, command);
+/*    DIO_WritePort(LCD_PORT, command);*/
 
     DIO_WritePin(D7, READ_BIT(command,7));
     DIO_WritePin(D6, READ_BIT(command,6));
@@ -35,7 +35,7 @@ void LCD_WriteData(uint8_t data)
 {
     DIO_WritePin(RS,HIGH);
     DIO_WritePin(RW,LOW);
-//    DIO_WritePort(LCD_PORT,data);
+/*    DIO_WritePort(LCD_PORT,data);*/
 
     DIO_WritePin(D7, READ_BIT(data,7));
     DIO_WritePin(D6, READ_BIT(data,6));
@@ -70,14 +70,14 @@ void LCD_Init(void)
     DIO_InitPin(D0, OUTPUT);
 
     _delay_ms(10);
-    LCD_WriteCommand(0x38); //select 8 bit mode,font 5*7,select 2 lines
-    _delay_us(200);
-    LCD_WriteCommand(0x0c); //cursor  0x0c,0x0e,0x0f
-    _delay_us(200);
-    LCD_WriteCommand(0x01); //clear lcd
+    LCD_WriteCommand(0x38); /*select 8 bit mode,font 5*7,select 2 lines*/
+    _delay_ms(1);
+    LCD_WriteCommand(0x0c); /*cursor  0x0c,0x0e,0x0f*/
+    _delay_ms(1);
+    LCD_WriteCommand(0x01); /*clear lcd*/
     _delay_ms(2);
-    LCD_WriteCommand(0x06); //DDRAM address increase
-    _delay_us(200);
+    LCD_WriteCommand(0x06); /*DDRAM address increase*/
+    _delay_ms(1);
 
 }
 #elif (LCD_MODE == 4)
@@ -91,17 +91,17 @@ void LCD_WriteCommand(uint8_t command)
     DIO_WritePin(D5, READ_BIT(command,5));
     DIO_WritePin(D4, READ_BIT(command,4));
     DIO_WritePin(EN, HIGH);
-    _delay_us(200);
+    _delay_ms(1);
     DIO_WritePin(EN, LOW);
-    _delay_us(200);
+    _delay_ms(1);
     DIO_WritePin(D7, READ_BIT(command,3));
     DIO_WritePin(D6, READ_BIT(command,2));
     DIO_WritePin(D5, READ_BIT(command,1));
     DIO_WritePin(D4, READ_BIT(command,0));
     DIO_WritePin(EN, HIGH);
-    _delay_us(200);
+    _delay_ms(1);
     DIO_WritePin(EN, LOW);
-    _delay_us(200);
+    _delay_ms(1);
 }
 
 void LCD_WriteData(uint8_t data)
@@ -113,17 +113,17 @@ void LCD_WriteData(uint8_t data)
     DIO_WritePin(D5, READ_BIT(data,5));
     DIO_WritePin(D4, READ_BIT(data,4));
     DIO_WritePin(EN, HIGH);
-    _delay_us(200);
+    _delay_ms(1);
     DIO_WritePin(EN, LOW);
-    _delay_us(200);
+    _delay_ms(1);
     DIO_WritePin(D7, READ_BIT(data,3));
     DIO_WritePin(D6, READ_BIT(data,2));
     DIO_WritePin(D5, READ_BIT(data,1));
     DIO_WritePin(D4, READ_BIT(data,0));
     DIO_WritePin(EN, HIGH);
-    _delay_us(200);
+    _delay_ms(1);
     DIO_WritePin(EN, LOW);
-    _delay_us(200);
+    _delay_ms(1);
 }
 
 /**
@@ -131,6 +131,8 @@ void LCD_WriteData(uint8_t data)
  */
 void LCD_Init(void)
 {
+    DIO_PORT_Init(PORTA);
+    DIO_PORT_Init(PORTC);
     DIO_InitPin(RS, OUTPUT);
     DIO_InitPin(RW, OUTPUT);
     DIO_InitPin(EN, OUTPUT);
@@ -141,19 +143,20 @@ void LCD_Init(void)
 
     _delay_ms(50);
     LCD_WriteCommand(0x02);
-    _delay_us(200);
-    LCD_WriteCommand(0x28);     //select 4bit mode,font 5*7,select 2 lines
-    _delay_us(200);
-    LCD_WriteCommand(0x0c);     //cursor  0x0c,0x0e,0x0f
-    _delay_us(200);
-    LCD_WriteCommand(0x01);     //clear lcd
+    _delay_ms(1);
+    LCD_WriteCommand(0x28);     /*select 4bit mode,font 5*7,select 2 lines*/
+    _delay_ms(1);
+    LCD_WriteCommand(0x0c);     /*cursor  0x0c,0x0e,0x0f*/
+    _delay_ms(1);
+    LCD_WriteCommand(0x01);     /*clear lcd*/
     _delay_ms(2);
-    LCD_WriteCommand(0x06);     //DDRAM address increase
-    //_delay_us(200);
-    //LCD_WriteCommand(0x80);
+    LCD_WriteCommand(0x06);     /*DDRAM address increase*/
+    /*_delay_ms(1);*/
+    /*LCD_WriteCommand(0x80);*/
 
 
     /* 6.8 ms */
+    LCD_Clear();
     LCD_SetCursor(0, 0);     /* 800us */
     LCD_WriteString("T= ");   /* (800us*chars) */
     LCD_WriteNumber_2D(0);   /* 800us*2 */
@@ -162,7 +165,7 @@ void LCD_Init(void)
     LCD_SetCursor(1, 0);
     LCD_WriteString("LDR: ");
     LCD_WriteNumber_3D(0);
-    LCD_WriteString(" | ET= ");
+    LCD_WriteString("|ET= ");
     LCD_WriteNumber_2D(0);
 }
 #endif

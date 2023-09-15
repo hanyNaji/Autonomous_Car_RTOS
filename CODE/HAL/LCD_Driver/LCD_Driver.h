@@ -22,7 +22,7 @@
 //#define   D2     (PB6)
 //#define   D3     (PB5)
 
-#define   D4     (PB4)
+#define   D4     (PC6)
 #define   D5     (PA5)
 #define   D6     (PA6)
 #define   D7     (PA7)

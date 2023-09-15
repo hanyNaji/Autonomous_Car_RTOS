@@ -8,6 +8,7 @@
 
 #include <scheduler/scheduler.h>
 #include "MCAL/systick/systick.h"
+#include "MCAL/Tiva_DIO/Tiva_DIO.h"
 
 
 
@@ -31,7 +32,9 @@ void tasks_scheduler(void)
         while( !SysTick_Read_COUNT() )
         {
             task_Control_Block[index].task_ptr();
+            _delay_ms(1);
         }
+        _delay_ms(10);
 
         index++;
         if(index == NUM_OF_TASKS)
@@ -52,7 +55,7 @@ void tasks_scheduler(void)
 void create_task(void (*task)(), uint32_t ms_periodicity )
 {
     static uint8_t index=0;
-    if(index == (NUM_OF_TASKS -1))
+    if(index >= (NUM_OF_TASKS))
     {
         return;
     }
