@@ -27,9 +27,9 @@
 
 /******* #Defines - MACROs *******/
 
-#define TASK_1_PERIOD   50U
+#define TASK_1_PERIOD   5U
 #define TASK_2_PERIOD   56U
-#define TASK_3_PERIOD   50U
+#define TASK_3_PERIOD   5U
 
 
 #define SW1    PF4
