@@ -32,9 +32,9 @@ void tasks_scheduler(void)
         while( !SysTick_Read_COUNT() )
         {
             task_Control_Block[index].task_ptr();
-            _delay_ms(1);
+            
         }
-        _delay_ms(10);
+        _delay_us(10);
 
         index++;
         if(index == NUM_OF_TASKS)
