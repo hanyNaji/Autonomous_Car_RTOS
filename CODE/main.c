@@ -3,7 +3,7 @@
 /*** MCAL ***/
 /* DIO*/
 /* GPTM*/
-/* ADC */
+/*  ADC  */
 #include <MCAL/Tiva_GPTM_Timers/Tiva_GPTM_Timers.h>
 #include "MCAL/Tiva_DIO/Tiva_DIO.h"
 #include "MCAL/Tiva_ADC/ADC.h"
