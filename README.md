@@ -6,4 +6,5 @@ This repo. is divided into to projects:
 ## 1. [Autonomous Car with simple manual non-preemptive scheduler](https://github.com/hanyNaji/Autonomous_Car_RTOS/tree/main/Autonomous_Car_Simple_Scheduler).
 ## 2. [Autonomous Car using freeRTOS](https://github.com/hanyNaji/Autonomous_Car_RTOS/tree/main/Autonomous_Car_freeRTOS).
 
-## - [Documentation](https://www.notion.so/Autonomous-Car-Report-fbd932191bd2484f8b8bba542ede4a96?pvs=4).
+<br></br>
+## [Documentation](https://www.notion.so/Autonomous-Car-Report-fbd932191bd2484f8b8bba542ede4a96?pvs=4).
