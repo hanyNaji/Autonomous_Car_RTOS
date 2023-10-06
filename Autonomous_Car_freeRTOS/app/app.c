@@ -1,5 +1,5 @@
 /*
- * scheduler.c
+ * app.c
  *
  *  Created on: Sep 9, 2023
  *      Author: hany Nagy
